@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Encuestas - Django</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .intro h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+        
+        .intro p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .polls-section {
+            margin-top: 30px;
+        }
+        
+        .polls-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .polls-list {
+            list-style: none;
+        }
+        
+        .polls-list li {
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        
+        .polls-list li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .polls-list a {
+            display: block;
+            padding: 20px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .polls-list a:hover {
+            color: #4facfe;
+        }
+        
+        .no-polls {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .feature {
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .feature h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 Sistema de Encuestas</h1>
+            <p>Una aplicación Django moderna para crear y gestionar encuestas</p>
+        </div>
+        
+        <div class="content">
+            <div class="intro">
+                <h2>¡Bienvenido!</h2>
+                <p>
+                    Este es un sistema de encuestas desarrollado con Django siguiendo el tutorial oficial. 
+                    Aquí puedes crear, votar y ver resultados de encuestas de manera interactiva y moderna.
+                </p>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h4>Crear Encuestas</h4>
+                    <p>Administra preguntas y opciones de respuesta fácilmente</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🗳️</div>
+                    <h4>Votar</h4>
+                    <p>Los usuarios pueden votar en las encuestas disponibles</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📈</div>
+                    <h4>Ver Resultados</h4>
+                    <p>Visualiza estadísticas y resultados en tiempo real</p>
+                </div>
+            </div>
+            
+            <div class="polls-section">
+                <h3>Encuestas Disponibles</h3>
+                {% if latest_question_list %}
+                    <ul class="polls-list">
+                        {% for question in latest_question_list %}
+                            <li>
+                                <a href="{% url 'polls:detail' question.id %}">
+                                    {{ question.question_text }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="no-polls">
+                        <p>No hay encuestas disponibles en este momento.</p>
+                        <p>¡Crea algunas desde el panel de administración!</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

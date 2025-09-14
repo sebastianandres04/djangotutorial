@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados: {{ question.question_text }} - Sistema de Encuestas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+        }
+        
+        .question h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .results-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+        
+        .result-item {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+        
+        .choice-text {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .vote-count {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            transition: width 0.3s ease;
+        }
+        
+        .total-votes {
+            text-align: center;
+            padding: 20px;
+            background: #e3f2fd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .total-votes h3 {
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+        
+        .total-votes p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .action-button.secondary {
+            background: #6c757d;
+        }
+        
+        .action-button.secondary:hover {
+            box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Resultados de la Encuesta</h1>
+        </div>
+        
+        <div class="content">
+            <div class="question">
+                <h2>{{ question.question_text }}</h2>
+                
+                <div class="total-votes">
+                    <h3>Total de votos</h3>
+                    <p>{{ question.total_votes }} voto{{ question.total_votes|pluralize }}</p>
+                </div>
+                
+                <ul class="results-list">
+                    {% for choice in question.choice_set.all %}
+                        <li class="result-item">
+                            <div class="choice-text">{{ choice.choice_text }}</div>
+                            <div class="vote-count">
+                                {{ choice.votes }} voto{{ choice.votes|pluralize }}
+                                {% if question.total_votes > 0 %}
+                                    ({{ choice.votes|floatformat:1 }}%)
+                                {% endif %}
+                            </div>
+                           
+                        </li>
+                    {% endfor %}
+                </ul>
+                
+                <div class="actions">
+                    <a href="{% url 'polls:detail' question.id %}" class="action-button secondary">
+                        Votar de nuevo
+                    </a>
+                    <a href="{% url 'polls:index' %}" class="action-button">
+                        Ver todas las encuestas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

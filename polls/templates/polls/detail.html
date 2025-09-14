@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ question.question_text }} - Sistema de Encuestas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .question {
+            margin-bottom: 30px;
+        }
+        
+        .question h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+        
+        .choices {
+            list-style: none;
+        }
+        
+        .choices li {
+            margin-bottom: 15px;
+        }
+        
+        .choice-label {
+            display: block;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .choice-label:hover {
+            background: #e9ecef;
+            border-color: #4facfe;
+        }
+        
+        .choice-input {
+            margin-right: 10px;
+        }
+        
+        .choice-input:checked + .choice-label {
+            background: #e3f2fd;
+            border-color: #4facfe;
+            color: #1976d2;
+        }
+        
+        .vote-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-top: 20px;
+        }
+        
+        .vote-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: #4facfe;
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 500;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗳️ Votar en Encuesta</h1>
+        </div>
+        
+        <div class="content">
+            <div class="question">
+                <h2>{{ question.question_text }}</h2>
+                
+                {% if error_message %}
+                    <div class="error-message">
+                        <strong>Error:</strong> {{ error_message }}
+                    </div>
+                {% endif %}
+                
+                <form action="{% url 'polls:vote' question.id %}" method="post">
+                    {% csrf_token %}
+                    <ul class="choices">
+                        {% for choice in question.choice_set.all %}
+                            <li>
+                                <input type="radio" 
+                                       name="choice" 
+                                       id="choice{{ forloop.counter }}" 
+                                       value="{{ choice.id }}"
+                                       class="choice-input">
+                                <label for="choice{{ forloop.counter }}" class="choice-label">
+                                    {{ choice.choice_text }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    
+                    <button type="submit" class="vote-button">
+                        Votar
+                    </button>
+                </form>
+                
+                <a href="{% url 'polls:index' %}" class="back-link">
+                    ← Volver a la lista de encuestas
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
